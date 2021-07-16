@@ -1,0 +1,11 @@
+<!-- здесь импортируем контент из default -->
+{% extends 'flatpages/default.html'%}
+
+
+
+{% block content %}
+<!-- здесь контент из файла -->
+<h1>контент из файла about</h1>
+{{ flatpage.content }}
+
+{% endblock content %}
