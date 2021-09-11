@@ -1,13 +1,53 @@
-<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
 {% extends 'flatpages/default.html' %}
 
-<!-- Название у нас будет proudcts -->
 {% block title %}
 Products
 {% endblock title %}
 
-<!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-<h1>Все товары</h1>
-{{ products }}
+    <h1>Все товары</h1>
+    <h3>{{ time_now|date:'M d Y' }}</h3> <!-- Здесь мы применяем фильтр date. Он очень похож на метод strftime у даты. С его помощью мы можем выводить дату в нужном нам формате -->
+    <hr>
+    {% if products %}
+        <table>
+            <tr>
+                <td>
+                    Название
+                </td>
+                <td>
+                    Описание
+                </td>
+                <td>
+                    Категория
+                </td>
+                <td>
+                    Цена
+                </td>
+                <td>
+                    Количество
+                </td>
+            </tr>
+        {% for product in products %}
+            <tr>
+                <td>
+                    {{ product.name }}
+                </td>
+                <td>
+                    {{ product.description|truncatewords:4 }}
+                </td>
+                <td>
+                    {{ product.category.name }}
+                </td>
+                <td>
+                    {{ product.price }}
+                </td>
+                <td>
+                    {{ product.quantity }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h2>Товаров нет!</h2>
+    {% endif %}
 {% endblock content %}
