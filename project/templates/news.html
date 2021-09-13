@@ -6,7 +6,7 @@
 {% load custom_filters %} <!-- не забываем заранее загружать наши фильтры! -->
 
 {% block title %}
-Products
+News
 {% endblock title %}
 
 {% block content %}
@@ -14,52 +14,54 @@ Products
    .txt {
        font-size: 4em;
    }
+   .indentation {
+       padding: 10px 15px 5px 15px;
+   }
 </style>
-    <h1 class="txt">Все товары</h1>
+    <h1 class="txt">Все новости</h1>
     <h3>{{ time_now }}</h3>
-    <h3> {{ value1|default_if_none:"ничего" }} </h3>
     <hr>
-    {% if products %}
+    {% if news %}
         <table>
             <tr>
-                <td>
+                <td class="indentation">
                     Название
                 </td>
-                <td>
+                <td class="indentation">
                     Описание
                 </td>
-                <td>
+                <td class="indentation">
                     Категория
                 </td>
-                <td>
+                <td class="indentation">
                     Дата
                 </td>
-                <td>
+                <td class="indentation">
                     Полный текст
                 </td>
             </tr>
-        {% for product in products %}
+        {% for new in news %}
             <tr>
-                <td>
-                    {{ product.name|multiply:4 }} <!-- применим наш фильтр, чтобы название товара вывелось 4 раза -->
+                <td class="indentation">
+                    {{ new.name|multiply:4 }} <!-- применим наш фильтр, чтобы название товара вывелось 4 раза -->
                 </td>
-                <td>
-                    {{ product.description|truncatewords:4 }}
+                <td class="indentation">
+                    {{ new.description|truncatewords:4 }}
                 </td>
-                <td>
-                    {{ product.category.name }}
+                <td class="indentation">
+                    {{ new.category.name }}
                 </td>
-                <td>
-                    {{ product.data }}
+                <td class="indentation">
+                    {{ new.data }}
                 </td>
-                <td>
-                    {{ product.full_text }}
+                <td class="indentation">
+                    {{ new.full_text|truncatechars:50 }}
                 </td>
             </tr>
         {% endfor %}
         </table>
     {% else %}
-        <h2>Товаров нет!</h2>
+        <h2>Новостей нет!</h2>
     {% endif %}
 
 {% endblock content %}
