@@ -1,8 +1,12 @@
 from django.urls import path
-from .views import ProductList, ProductDetail
+from .views import NewList, NewDetailView, Search, NewCreateView, NewDeleteView, NewUpdateView
+
 
 urlpatterns = [
-    path('', ProductList.as_view()),
-    path('<int:pk>', ProductDetail.as_view()),
-    # pk — это первичный ключ товара, который будет выводиться у нас в шаблон
+    path('', NewList.as_view()),
+    path('<int:pk>', NewDetailView.as_view(), name='new'),
+    path('search/', Search.as_view()),
+    path('create/', NewCreateView.as_view(), name='new_create'),
+    path('<int:pk>/update/', NewUpdateView.as_view(), name='new_update'),
+    path('<int:pk>/delete/', NewDeleteView.as_view(), name='new_delete'),
 ]

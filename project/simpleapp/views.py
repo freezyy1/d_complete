@@ -1,23 +1,61 @@
-# from django.shortcuts import render
-from django.views.generic import ListView, DetailView  # импортируем класс получения деталей объекта
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from .models import New
-from datetime import datetime
+from .filters import PostFilter
+from .forms import NewForm
 
 
-class ProductList(ListView):
+class NewList(ListView):
     model = New
     template_name = 'news.html'
     context_object_name = 'news'
+    queryset = New.objects.order_by('-created')
+    paginate_by = 10
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
-        context[
-            'value1'] = None  # добавим ещё одну пустую переменную, чтобы на её примере посмотреть работу другого фильтра
+        context['filter'] = PostFilter(self.request.GET,
+                                       queryset=self.get_queryset())
         return context
 
-# создаём представление в котором будет детали конкретного отдельного товара
-class ProductDetail(DetailView):
-    model = New  # модель всё та же, но мы хотим получать детали конкретно отдельного товара
-    template_name = 'new.html'  # название шаблона будет new,html
-    context_object_name = 'new'
+
+class NewDetailView(DetailView):
+    template_name = 'new.html'
+    queryset = New.objects.all()
+
+
+class Search(ListView):
+    model = New
+    template_name = 'search.html'
+    context_object_name = 'news'
+    ordering = ['-created']
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = PostFilter(self.request.GET,
+                                       queryset=self.get_queryset())
+        return context
+
+
+class NewCreateView(CreateView):
+    template_name = 'new_create.html'
+    form_class = NewForm
+    success_url = '/news/'
+
+
+class NewUpdateView(UpdateView):
+    template_name = 'new_update.html'
+    form_class = NewForm
+    success_url = '/news/'
+
+
+    def get_object(self, **kwargs):
+        id = self.kwargs.get('pk')
+        return New.objects.get(pk=id)
+
+
+class NewDeleteView(DeleteView):
+    template_name = 'new_delete.html'
+    queryset = New.objects.all()
+    success_url = '/news/'

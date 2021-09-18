@@ -1,11 +1,32 @@
 {% extends 'flatpages/default.html' %}
 
-<!-- Название у нас будет News -->
 {% block title %}
-News
+  {{ new.new_name }}
 {% endblock title %}
 
-
 {% block content %}
-<h1>{{ new }}</h1>
+  <table>
+      <thead>
+          <th>
+              Название
+          </th>
+          <th>
+              Дата публикации
+          </th>
+          <th>
+              Содержание
+          </th>
+      </thead>
+      <tr>
+          <td>
+              {{ new.post_name }}
+          </td>
+          <td>
+              {{ new.created | date:'d M Y' }}
+          </td>
+          <td>
+              {{ new.content }}
+          </td>
+      </tr>
+  </table>
 {% endblock content %}
