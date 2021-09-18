@@ -2,6 +2,8 @@ from django.views.generic import ListView, DetailView, UpdateView, CreateView, D
 from .models import New
 from .filters import PostFilter
 from .forms import NewForm
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 
 
 class NewList(ListView):
@@ -59,3 +61,17 @@ class NewDeleteView(DeleteView):
     template_name = 'new_delete.html'
     queryset = New.objects.all()
     success_url = '/news/'
+
+class blockcreate(PermissionRequiredMixin, NewCreateView):
+    permission_required = ('shop.add_product', )
+    # здесь должно быть ограничение на использование создания
+
+
+class blockupdate(PermissionRequiredMixin, NewUpdateView):
+    permission_required = ('shop.add_product', )
+    # здесь должно быть ограничение на использование редактирования
+
+
+class blockdelete(PermissionRequiredMixin, NewDeleteView):
+    permission_required = ('shop.add_product', )
+    # здесь должно быть ограничение на использование удаления

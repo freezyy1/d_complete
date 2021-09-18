@@ -1,67 +1,105 @@
 {% extends 'flatpages/default.html' %}
-{% load static %}
 
-
-
-{% load custom_filters %} <!-- не забываем заранее загружать наши фильтры! -->
+{% load custom_filters %}
 
 {% block title %}
-News
+    Новости
 {% endblock title %}
 
+<!-- post_name - переменная для доступа к полю имени объекта-->
 {% block content %}
+
 <style type="text/css">
-   .txt {
-       font-size: 4em;
-   }
    .indentation {
        padding: 10px 15px 5px 15px;
    }
+   .indentation_for_txt{
+       padding: 3px 15px 3px 15px;
+   }
 </style>
-    <h1 class="txt">Все новости</h1>
-    <h3>{{ time_now }}</h3>
+
+    <h1>Все новости</h1>
+    <h3>Общее количество: {{ news | length }}</h3>
+    <hr>
+    <form method="GET">
+        {{ filter.form }}
+        <input type="submit" value="Найти">
+    </form>
     <hr>
     {% if news %}
         <table>
             <tr>
                 <td class="indentation">
+                    Автор
+                </td>
+                <td class="indentation">
+                    Рэйтинг
+                </td>
+                <td class="indentation">
                     Название
                 </td>
                 <td class="indentation">
-                    Описание
+                    Дата публикации
                 </td>
                 <td class="indentation">
-                    Категория
+                    Содержание
                 </td>
                 <td class="indentation">
-                    Дата
-                </td>
-                <td class="indentation">
-                    Полный текст
+                    Действия
                 </td>
             </tr>
-        {% for new in news %}
+            <!-- проходимся new по фильтру -->
+        {% for new in filter.qs %}
             <tr>
-                <td class="indentation">
-                    {{ new.name|multiply:4 }} <!-- применим наш фильтр, чтобы название товара вывелось 4 раза -->
+                <td class="indentation_for_txt">
+                    {{ new.author }}
                 </td>
-                <td class="indentation">
-                    {{ new.description|truncatewords:4 }}
+                <td class="indentation_for_txt">
+                    {{ new.rating_new }}
                 </td>
-                <td class="indentation">
-                    {{ new.category.name }}
+                <td class="indentation_for_txt">
+                    <a href="{% url 'new' new.id %}">{{ new.post_name }}</a>
                 </td>
-                <td class="indentation">
-                    {{ new.data }}
+                <td class="indentation_for_txt">
+                    {{ new.created | date:'d M Y' }}
                 </td>
-                <td class="indentation">
-                    {{ new.full_text|truncatechars:50 }}
+                <td class="indentation_for_txt">
+                    {{ new.content | truncatechars:50 }}
                 </td>
+                    <td class="indentation_for_txt">
+                        <a href="{% url 'new_update' new.id %}"><u>Редактировать</u></a>
+                     <a href="{% url 'new_delete' new.id %}"><u> Удалить </u></a>
+                    </td>
             </tr>
         {% endfor %}
         </table>
+        <hr>
+        <a href="{% url 'new_create' %}">Добавить новую запись</a> <br>
+        <hr>
+        {% if is_paginated %}
+
+            {% if page_obj.has_previous %}
+                <a href="?page=1">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a>{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">>>></a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+            {% endif %}
+
+        {% endif %}
     {% else %}
-        <h2>Новостей нет!</h2>
+        <h2>Новостей нет.</h2>
+        <a href="{% url 'new_create' %}">Добавить новую запись</a> <br>
     {% endif %}
 
 {% endblock content %}
