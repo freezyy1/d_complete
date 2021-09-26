@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from .models import New
 from .filters import PostFilter
-from .forms import NewForm
+from .forms import NewForm, UpdateForm
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
@@ -48,7 +48,7 @@ class NewCreateView(CreateView):
 
 class NewUpdateView(UpdateView):
     template_name = 'new_update.html'
-    form_class = NewForm
+    form_class = UpdateForm
     success_url = '/news/'
 
 

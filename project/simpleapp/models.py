@@ -40,6 +40,10 @@ class Category(models.Model):
     category = models.CharField(max_length=100, unique=True)
 
 
+    def __str__(self):
+        return self.category
+
+
 class New(models.Model):
     state = 'ST'
     new = 'NE'
@@ -71,11 +75,17 @@ class New(models.Model):
         prev = self.content[:124] + '...'
         return prev
 
+    def __str__(self):
+        return self.new
+
+
 
 class NewCategory(models.Model):
     new = models.ForeignKey(New, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.NewCategory
 
 class Comment(models.Model):
     comment = models.TextField()

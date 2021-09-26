@@ -6,8 +6,10 @@
 
 {% block content %}
     <title>Кнопка</title>
-    <h2 class="div">честно говоря я не понял как редактировать форму</h2>
-    <form action="http://127.0.0.1:8000/news/" target="_blank">
-        <button>Переход на главную страницу</button>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
+        <input type="submit" value="Редактировать запись">
     </form>
+
 {% endblock content %}

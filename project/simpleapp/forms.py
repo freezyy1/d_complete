@@ -1,4 +1,4 @@
-from django.forms import ModelForm, BooleanField # Импортируем true-false поле
+from django.forms import ModelForm, BooleanField
 from .models import New
 
 
@@ -12,3 +12,11 @@ class NewForm(ModelForm):
         model = New
         fields = ['post_name', 'position', 'category', 'author', 'content', 'check_box']
         # не забываем включить галочку в поля иначе она не будет показываться на странице!
+
+
+class UpdateForm(ModelForm):
+    check_box = BooleanField(label='подтвердите действие:')
+
+    class Meta:
+        model = New
+        fields = ['post_name', 'content', 'check_box']
