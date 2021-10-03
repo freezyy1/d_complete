@@ -2,16 +2,13 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-
 class Author(models.Model):
     author = models.CharField(max_length=200)
     rating_auth = models.IntegerField(default=0)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-
     def __str__(self):
         return self.author
-
 
     def update_rating(self):
         auth = Author.objects.get(author=self.author)
@@ -39,7 +36,6 @@ class Author(models.Model):
 class Category(models.Model):
     category = models.CharField(max_length=100, unique=True)
 
-
     def __str__(self):
         return self.category
 
@@ -61,6 +57,9 @@ class New(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     category = models.ManyToManyField(Category, through='NewCategory')
 
+    def __str__(self):
+        return self.post_name
+
     def like(self):
         self.rating_new += 1
         self.save()
@@ -75,17 +74,14 @@ class New(models.Model):
         prev = self.content[:124] + '...'
         return prev
 
-    def __str__(self):
-        return self.new
-
-
 
 class NewCategory(models.Model):
     new = models.ForeignKey(New, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.NewCategory
+        return f'{self.post.post_name} - {self.category.category}'
+
 
 class Comment(models.Model):
     comment = models.TextField()

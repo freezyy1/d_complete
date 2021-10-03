@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'simpleapp',
+    'simpleapp.apps.SimpleappConfig',
     'django_filters',
     'sign',
     'protect',
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
 ]
 
 
@@ -163,3 +164,42 @@ LOGIN_REDIRECT_URL = '/'
 
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
 
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '',
+            'secret': '',
+            'key': ''
+        }
+    }
+}
+
+# формат даты, которую будет воспрнимать наш задачник(вспоминаем урок по фильтрам)
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+# если задача не выполняется за 25 секунд, то она автоматически снимается,
+# можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+EMAIL_HOST = 'smtp.yandex.ru' # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465 # порт smtp сервера тоже одинаковый
+EMAIL_HOST_USER = 'Freezyyyyy@yandex.ru' # ваше имя пользователя, например если ваша почта user@yandex.ru, то сюда надо писать user, иными словами, это всё то что идёт до собаки
+EMAIL_HOST_PASSWORD = 'Cvvk2580258012' # пароль от почты
+EMAIL_USE_SSL = True # Яндекс использует ssl, подробнее о том, что это, почитайте на Википедии, но включать его здесь обязательно
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+ADMINS = [
+    ('dmitrii', 'dmitrij.satyukov@bk.ru'),
+    # список всех админов в формате ('имя', 'их почта')
+]
+MANAGERS = [
+    ('Дмитрий', 'dmitrij.satyukov@bk.ru'),
+    # список всех менеджеров в формате ('имя', 'их почта')
+]
+SERVER_EMAIL = 'Freezyyyyy@yandex.ru' # это будет у нас вместо аргумента FROM в массовой рассылке
