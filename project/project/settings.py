@@ -161,9 +161,6 @@ ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
         'APP': {
             'client_id': '541150609504-n7ams0l8g81clpslivnf9is4qi5rf8k7.apps.googleusercontent.com',
             'secret': '',
