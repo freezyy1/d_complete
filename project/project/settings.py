@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os.path
 from pathlib import Path
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -28,7 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
+    #'simpleapp',
+    # чтобы подключить email  уберите строку выше и подключите строку ниже (не забудьте про низ файла)
     'simpleapp.apps.SimpleappConfig',
     'django_filters',
     'sign',
@@ -50,7 +49,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'django_apscheduler',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,7 +82,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -94,7 +91,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -122,7 +118,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -137,7 +132,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -171,12 +165,17 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '',
+            'client_id': '541150609504-n7ams0l8g81clpslivnf9is4qi5rf8k7.apps.googleusercontent.com',
             'secret': '',
             'key': ''
         }
     }
 }
+
+
+
+
+# ОТСЮДА НАЧИНАЕТСЯ EMAIL
 
 # формат даты, которую будет воспрнимать наш задачник(вспоминаем урок по фильтрам)
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
@@ -185,14 +184,13 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 # можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 
-EMAIL_HOST = 'smtp.yandex.ru' # адрес сервера Яндекс-почты для всех один и тот же
-EMAIL_PORT = 465 # порт smtp сервера тоже одинаковый
-EMAIL_HOST_USER = 'Freezyyyyy@yandex.ru' # ваше имя пользователя, например если ваша почта user@yandex.ru, то сюда надо писать user, иными словами, это всё то что идёт до собаки
-EMAIL_HOST_PASSWORD = 'Cvvk2580258012' # пароль от почты
-EMAIL_USE_SSL = True # Яндекс использует ssl, подробнее о том, что это, почитайте на Википедии, но включать его здесь обязательно
+EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
+EMAIL_HOST_USER = 'Freezyyyyy@yandex.ru'  # ваше имя пользователя, например если ваша почта user@yandex.ru, то сюда надо писать user, иными словами, это всё то что идёт до собаки
+EMAIL_HOST_PASSWORD = ''  # пароль от почты
+EMAIL_USE_SSL = True  # Яндекс использует ssl, подробнее о том, что это, почитайте на Википедии, но включать его здесь обязательно
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
 
 ADMINS = [
     ('dmitrii', 'dmitrij.satyukov@bk.ru'),
@@ -202,4 +200,18 @@ MANAGERS = [
     ('Дмитрий', 'dmitrij.satyukov@bk.ru'),
     # список всех менеджеров в формате ('имя', 'их почта')
 ]
-SERVER_EMAIL = 'Freezyyyyy@yandex.ru' # это будет у нас вместо аргумента FROM в массовой рассылке
+SERVER_EMAIL = 'Freezyyyyy@yandex.ru'  # это будет у нас вместо аргумента FROM в массовой рассылке
+
+# ЗДЕСЬ КОНЧАЕТСЯ EMAIL
+
+
+
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+        # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+    }
+}

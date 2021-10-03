@@ -29,4 +29,7 @@
           </td>
       </tr>
   </table>
+    {% if is_not_subscribe %}
+        <button> <a href="{% url 'news:subscribe' new.id %}">Подписаться</a> </button>
+    {% endif %}
 {% endblock content %}

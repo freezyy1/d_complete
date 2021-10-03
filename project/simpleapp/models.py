@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.core.cache import cache
 
 
 class Author(models.Model):
@@ -35,6 +36,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     category = models.CharField(max_length=100, unique=True)
+    subscribers = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.category
@@ -58,7 +60,11 @@ class New(models.Model):
     category = models.ManyToManyField(Category, through='NewCategory')
 
     def __str__(self):
-        return self.post_name
+        return f'{self.post_name} {self.created} {self.category}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
+        cache.delete(f'product-{self.pk}')  # затем удаляем его из кэша, чтобы сбросить его
 
     def like(self):
         self.rating_new += 1
