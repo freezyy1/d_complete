@@ -6,7 +6,18 @@ from django.shortcuts import redirect
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+import logging
 from django.core.mail import send_mail
+
+
+logger = logging.getLogger(__name__)
+
+logger.debug("Hello! I'm debug in your app. Enjoy:)")
+logger.info("Hello! I'm info in your app. Enjoy:)")
+logger.warning("Hello! I'm warning in your app. Enjoy:)")
+logger.error("Hello! I'm error in your app. Enjoy:)")
+logger.critical("Hello! I'm critical in your app. Enjoy:)")
+
 
 
 class NewList(ListView):
@@ -54,7 +65,17 @@ class Search(ListView):
         return context
 
 
-
+def mail_post(name, text, category):
+    catygorys = Category.objects.filter(name=category)
+    for category_ in catygorys:
+        subscs = Category.subscribers.all()
+        for subsc in subscs:
+            send_mail(
+                subject=name,
+                message=text,
+                from_email='Freezyyyyy@yandex.ru',
+                recipient_list=[subsc.user.email, ]
+            )
 
 
 class NewCreateView(PermissionRequiredMixin, CreateView):
@@ -62,6 +83,10 @@ class NewCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'new_create.html'
     form_class = NewForm
     success_url = '/news/'
+
+    mail_post(New.post_name,
+              New.content,
+              New.category)
 
 
 class NewUpdateView(PermissionRequiredMixin, UpdateView):
@@ -80,6 +105,7 @@ class NewDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'new_delete.html'
     queryset = New.objects.all()
     success_url = '/news/'
+
 
 
 def subscribe_to_category(request, category_pk):

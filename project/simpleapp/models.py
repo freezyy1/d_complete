@@ -60,7 +60,7 @@ class New(models.Model):
     category = models.ManyToManyField(Category, through='NewCategory')
 
     def __str__(self):
-        return self.post_name
+        return f'{self.post_name}'
 
     def get_absolute_url(self):
         return f'/news/{self.id}'
