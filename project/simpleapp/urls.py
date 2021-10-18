@@ -1,5 +1,5 @@
-from django.urls import path
 from .views import NewList, NewDetailView, Search, NewCreateView, NewDeleteView, NewUpdateView, subscribe_me
+from django.urls import path, include
 
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/update/', NewUpdateView.as_view(), name='new_update'),
     path('<int:pk>/delete/', NewDeleteView.as_view(), name='new_delete'),
     path('<int:pk>/subscribe/', subscribe_me, name='subscribe'),
+
 ]

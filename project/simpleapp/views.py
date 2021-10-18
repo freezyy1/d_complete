@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.mail import send_mail
 
+
 class NewList(ListView):
     model = New
     template_name = 'news.html'
@@ -53,31 +54,18 @@ class Search(ListView):
         return context
 
 
-def mail_subscr(name, text, categ):
-    cats = Category.objects.filter(category=categ)
-    for cat in cats:
-        subscs = Category.subscribers.all()
-        for subsc in subscs:
-            send_mail(
-                subject=name,
-                # имя клиента и дата записи будут в теме для удобства
-                message=text,  # сообщение с кратким описанием проблемы
-                from_email='Freezyyyyy@yandex.ru',
-                # здесь указываете почту, с которой будете отправлять (об этом попозже)
-                recipient_list=[subsc.user.email, ]
-                # здесь список получателей. Например, секретарь, сам врач и т. д.
-            )
+
 
 
 class NewCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = ('news.add_post',)
+    permission_required = ('simpleapp.add_new',)
     template_name = 'new_create.html'
     form_class = NewForm
     success_url = '/news/'
 
 
 class NewUpdateView(PermissionRequiredMixin, UpdateView):
-    permission_required = ('news.change_post',)
+    permission_required = ('simpleapp.change_new',)
     template_name = 'new_update.html'
     form_class = UpdateForm
     success_url = '/news/'
@@ -88,7 +76,7 @@ class NewUpdateView(PermissionRequiredMixin, UpdateView):
 
 
 class NewDeleteView(PermissionRequiredMixin, DeleteView):
-    permission_required = ('news.delete_post',)
+    permission_required = ('simpleapp.delete_new',)
     template_name = 'new_delete.html'
     queryset = New.objects.all()
     success_url = '/news/'
@@ -102,10 +90,15 @@ def subscribe_to_category(request, category_pk):
 
 
 @login_required
-def subscribe_me(request):
-    new_id = int(request.path.split('/')[-3])
-    post_categories = New.objects.get(id=new_id).category_set.all()
-
+def subscribe_me(request, pk):
+    post = New.objects.get(id=pk)
+    post_categories = post.category.all()
     for post_category in post_categories:
         category_pk = post_category.id
-        subscribe_to_category(request, category_pk)
+        category = Category.objects.get(pk=category_pk)
+        category.subscribers.add(request.user)
+        category.save()
+    return redirect('/news/')
+
+
+

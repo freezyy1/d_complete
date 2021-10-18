@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    #'simpleapp',
+    # 'simpleapp',
     # чтобы подключить email  уберите строку выше и подключите строку ниже (не забудьте про низ файла)
     'simpleapp.apps.SimpleappConfig',
     'django_filters',
@@ -74,7 +74,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
             ],
         },
     },
@@ -151,7 +150,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+
+# здесь мб может что-то возникнуть
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 LOGIN_URL = 'accounts/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -168,9 +170,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
-
-
 
 # ОТСЮДА НАЧИНАЕТСЯ EMAIL
 
@@ -200,9 +199,6 @@ MANAGERS = [
 SERVER_EMAIL = 'Freezyyyyy@yandex.ru'  # это будет у нас вместо аргумента FROM в массовой рассылке
 
 # ЗДЕСЬ КОНЧАЕТСЯ EMAIL
-
-
-
 
 
 CACHES = {

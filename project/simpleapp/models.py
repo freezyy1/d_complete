@@ -60,7 +60,10 @@ class New(models.Model):
     category = models.ManyToManyField(Category, through='NewCategory')
 
     def __str__(self):
-        return f'{self.post_name} {self.created} {self.category}'
+        return self.post_name
+
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
