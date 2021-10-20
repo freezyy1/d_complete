@@ -9,7 +9,6 @@ from django.core.cache import cache
 import logging
 from django.core.mail import send_mail
 
-
 logger = logging.getLogger(__name__)
 
 logger.debug("Hello! I'm debug in your app. Enjoy:)")
@@ -17,7 +16,6 @@ logger.info("Hello! I'm info in your app. Enjoy:)")
 logger.warning("Hello! I'm warning in your app. Enjoy:)")
 logger.error("Hello! I'm error in your app. Enjoy:)")
 logger.critical("Hello! I'm critical in your app. Enjoy:)")
-
 
 
 class NewList(ListView):
@@ -65,13 +63,13 @@ class Search(ListView):
         return context
 
 
-def mail_post(name, text, category):
+def mail_post(post_name, text, category):
     catygorys = Category.objects.filter(name=category)
     for category_ in catygorys:
         subscs = Category.subscribers.all()
         for subsc in subscs:
             send_mail(
-                subject=name,
+                subject=post_name,
                 message=text,
                 from_email='Freezyyyyy@yandex.ru',
                 recipient_list=[subsc.user.email, ]
@@ -84,9 +82,9 @@ class NewCreateView(PermissionRequiredMixin, CreateView):
     form_class = NewForm
     success_url = '/news/'
 
-    mail_post(New.post_name,
-              New.content,
-              New.category)
+    mail_post(form_class.Meta.model.post_name,
+                form_class.Meta.model.content,
+                form_class.Meta.model.category)
 
 
 class NewUpdateView(PermissionRequiredMixin, UpdateView):
@@ -107,7 +105,6 @@ class NewDeleteView(PermissionRequiredMixin, DeleteView):
     success_url = '/news/'
 
 
-
 def subscribe_to_category(request, category_pk):
     category = Category.objects.get(pk=category_pk)
     category.subscribers.add(request.user)
@@ -125,6 +122,3 @@ def subscribe_me(request, pk):
         category.subscribers.add(request.user)
         category.save()
     return redirect('/news/')
-
-
-
